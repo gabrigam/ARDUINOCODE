@@ -18,6 +18,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 #define XT_CAL_F 162500  //11.2024
 #define XT_CAL_F 158700  //3.2025
+#define XT_CAL_F 16400  //06.2025
 #define buttonenc 4
 #define tunestep 5  //Change the pin used by encoder push button if you want.
 #define pintone 7   //
@@ -79,7 +80,7 @@ boolean bandaKO = false;
 unsigned long inizio = 0;
 unsigned long fine = 0;
 
-String versione = "v3.8";
+String versione = "v3.9";
 
 ISR(PCINT2_vect) {
   char result = r.process();
@@ -156,7 +157,7 @@ void setup() {
   mode = 2;
 
   //recupero il vcalore del bfo
-   //EEPROM.put(320, 8995550);
+//   EEPROM.put(320, 8995750);
      EEPROM.get(320, bfo);
   //EEPROM.put(600, 4);
      //   EEPROM.get(600, bcor);
