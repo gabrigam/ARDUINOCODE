@@ -1,5 +1,6 @@
 /********************************************************************************************************
-  TXCONNECTOR versione 3.8
+  TXCONNECTOR versione 4.0
+  scambiati cho ch1
 *********************************************************************************************************/
 //Libraries
 #include <Adafruit_GFX.h>
@@ -19,6 +20,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define XT_CAL_F 162500  //11.2024
 #define XT_CAL_F 158700  //3.2025
 #define XT_CAL_F 16400  //06.2025
+#define XT_CAL_F 47750  //06.2025
 #define buttonenc 4
 #define tunestep 5  //Change the pin used by encoder push button if you want.
 #define pintone 7   //
@@ -80,7 +82,7 @@ boolean bandaKO = false;
 unsigned long inizio = 0;
 unsigned long fine = 0;
 
-String versione = "v3.9";
+String versione = "v4.0";
 
 ISR(PCINT2_vect) {
   char result = r.process();
@@ -157,7 +159,7 @@ void setup() {
   mode = 2;
 
   //recupero il vcalore del bfo
-//   EEPROM.put(320, 8995750);
+    // EEPROM.put(320, 8995750);
      EEPROM.get(320, bfo);
   //EEPROM.put(600, 4);
      //   EEPROM.get(600, bcor);
@@ -312,9 +314,9 @@ void loop() {
 
 void tunegen() {
 
-  if (freq <= 7210000) si5351.set_freq((freq + bfo + corr1) * 100, SI5351_CLK0);
-  else si5351.set_freq((freq - bfo + corr1) * 100, SI5351_CLK0);
-  si5351.set_freq((bfo + corr2) * 100, SI5351_CLK1);  //gab
+  if (freq <= 7210000) si5351.set_freq((freq + bfo + corr1) * 100, SI5351_CLK1); //vf0
+  else si5351.set_freq((freq - bfo + corr1) * 100, SI5351_CLK1); //vfo
+  si5351.set_freq((bfo + corr2) * 100, SI5351_CLK0);  //bfo
   si5351.update_status();
 }
 
