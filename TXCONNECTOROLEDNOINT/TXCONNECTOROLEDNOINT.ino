@@ -1,6 +1,11 @@
 /********************************************************************************************************
-  TXCONNECTOR versione 4.0
+  TXCONNECTOR versione 4.2
   scambiati cho ch1
+  rivisti i pin per il tono:
+  6 indica se ho premuto il tono , sostituisce pin7
+  12 se tono premuto allora attivo pwm su questo pin
+  13 high se sono in tx
+  8 non piu usato
 *********************************************************************************************************/
 //Libraries
 #include <Adafruit_GFX.h>
@@ -21,14 +26,14 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define XT_CAL_F 158700  //3.2025
 #define XT_CAL_F 16400  //06.2025
 #define XT_CAL_F 47750  //06.2025
-#define buttonenc 4
-#define tunestep 5  //Change the pin used by encoder push button if you want.
-#define pintone 7   //
-#define pttext A3   //ptt
+#define buttonenc 4 //bottone encoder
+#define tunestep 5  //step banda
+#define pintone 6   //tono
+#define pttext 13   //ptt
 #define smeter A2
 #define beeper A0     //beeper
-#define pintoneout 9  //tono x accordo
-#define controller 8  //tono x accordo
+#define pintoneout 12  //tono x accordo in uscita
+#define controller 8  
 #define banda10 13
 #define banda15 12
 #define banda20 11
@@ -82,7 +87,7 @@ boolean bandaKO = false;
 unsigned long inizio = 0;
 unsigned long fine = 0;
 
-String versione = "v4.0";
+String versione = "v4.2";
 
 ISR(PCINT2_vect) {
   char result = r.process();
@@ -186,13 +191,14 @@ void loop() {
     if (!manual) freq = incomingByte.toInt();  //se sono in automatico aggiorno la frequenza
   }
 
-  pttv = analogRead(pttext);
-  if (pttv >= 800 & freq <= 29700000) {
+  //pttv = analogRead(pttext);
+  pttv = digitalRead(pttext);
+  if (pttv ==HIGH ) {
 
-    bandaKO = bandaErrata(freq);
+   // bandaKO = bandaErrata(freq);
 
-    if (bandaKO) digitalWrite(controller, HIGH);
-    else digitalWrite(controller, LOW);
+   // if (bandaKO) digitalWrite(controller, HIGH);
+   // else digitalWrite(controller, LOW);
 
     delay(40);
     if (tx) {
@@ -205,7 +211,7 @@ void loop() {
     }
   } else {
     if (rx) {
-      digitalWrite(controller, LOW);
+      //digitalWrite(controller, LOW);
       Serial.println("u1");  //accendo SDR
       delay(100);
       Serial.println("u1");
